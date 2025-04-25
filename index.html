@@ -2,23 +2,98 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, 
-                         initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QR Code Generator</title>
     <style>
-      h1,
-      h3 {
-        color: green;
+      * {
+        box-sizing: border-box;
       }
-      body,
-      header {
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
+        min-height: 100vh;
+      }
+
+      header {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      h1 {
+        color: #2e8b57;
+        font-size: 2em;
+        margin-bottom: 5px;
+      }
+
+      h3 {
+        color: #555;
+        font-weight: 400;
+        font-size: 1em;
+      }
+
+      main {
+        width: 90%;
+        max-width: 400px;
+        background: white;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      input[type="text"] {
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      input[type="text"]:focus {
+        border-color: #2e8b57;
+      }
+
+      input[type="submit"] {
+        padding: 12px;
+        background-color: #2e8b57;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #246b45;
+      }
+
+      #qr-code {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      @media (max-width: 500px) {
+        h1 {
+          font-size: 1.6em;
+        }
+
+        h3 {
+          font-size: 0.95em;
+        }
       }
     </style>
 
@@ -27,49 +102,45 @@
 
   <body>
     <header>
-      <h1>QR code generator</h1>
-      <h3>Enter QR code content and generate QR</h3>
+      <h1>QR Code Generator</h1>
+      <h3>Enter text and generate your QR code</h3>
     </header>
     <main>
-      <form action="/" id="qr-generation-form">
+      <form id="qr-generation-form">
         <input
           type="text"
-          name="qr-code-content"
           id="qr-content"
-          value=""
           placeholder="Enter QR content"
           autocomplete="off"
         />
         <input type="submit" value="Generate QR Code" />
       </form>
-      <br />
       <div id="qr-code"></div>
     </main>
-  </body>
-  <script>
-    let qrContentInput = document.getElementById("qr-content");
-    let qrGenerationForm = document.getElementById("qr-generation-form");
-    let qrCode;
 
-    function generateQrCode(qrContent) {
-      return new QRCode("qr-code", {
-        text: qrContent,
-        width: 256,
-        height: 256,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H,
-      });
-    }
+    <script>
+      const qrContentInput = document.getElementById("qr-content");
+      const qrGenerationForm = document.getElementById("qr-generation-form");
+      let qrCode;
 
-    qrGenerationForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-      let qrContent = qrContentInput.value;
-      if (qrCode == null) {
-        qrCode = generateQrCode(qrContent);
-      } else {
-        qrCode.makeCode(qrContent);
+      function generateQrCode(qrContent) {
+        document.getElementById("qr-code").innerHTML = ""; // Clear previous QR
+        return new QRCode("qr-code", {
+          text: qrContent,
+          width: 256,
+          height: 256,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
+        });
       }
-    });
-  </script>
+
+      qrGenerationForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const qrContent = qrContentInput.value.trim();
+        if (qrContent === "") return;
+        generateQrCode(qrContent);
+      });
+    </script>
+  </body>
 </html>
